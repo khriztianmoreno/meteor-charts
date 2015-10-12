@@ -14,12 +14,13 @@ Template.senseChart.helpers({
  * Call the function to built the chart when the template is rendered
  */
 Template.senseChart.rendered = function () {
-    builtColumn();
+    //builtColumn();
     /*
      * add point when new metric is added
      */
-    this.autorun(function () {            
-        if( typeof(chartSensers) !== undefined ){
+    this.autorun(function () {          
+        if( typeof(chartSensers) !== 'undefined' ){
+          debugger
             Metrics.find({typeSensor: "sensor1"}).observe({
             added : function(metric){ 
                 var series = chartSensers.series[0],
@@ -58,16 +59,21 @@ Template.senseChart.events = {
 
       event.target.name.value = "";
       event.target.color.value = "";
+    },
+
+    'click #getChart': function(event, template){
+      builtColumn();
     }
 };
 
+var seriesList = [],
+    listYAxis = [];
 
 function addSerie (serie, template) {
 
   var sensor = {
     name: serie.name,
     type: 'spline',
-    yAxis: 1,
     data: [],
     tooltip: {
         valueSuffix: ' mm'
@@ -75,8 +81,60 @@ function addSerie (serie, template) {
   };
 
   var seriesSensors = template.seriesSensors.get();
-  seriesSensors.push(sensor);
-  template.seriesSensors.set(seriesSensors);
+
+  //Solo 4 series
+  if (seriesSensors.length <= 3) {
+
+    seriesSensors.push(sensor);
+    template.seriesSensors.set(seriesSensors);
+
+    if (listYAxis.length) {
+
+    };
+    //sensor.yAxis = seriesSensors.length;
+    seriesList.push(sensor); // List series Chart
+    addYAxis(sensor, false);  // yAxis serie Chart
+  };  
+};
+
+function addYAxis(serie, flag) {
+    var yAxis = {};
+    if (listYAxis.length % 2 === 0){
+      yAxis = { 
+          gridLineWidth: 0,
+          title: {
+              text: serie.name,
+              style: {
+                  color: Highcharts.getOptions().colors[0]
+              }
+          },
+          labels: {
+              format: '{value} mm',
+              style: {
+                  color: Highcharts.getOptions().colors[0]
+              }
+          }
+      }
+    }else{
+      yAxis = { 
+          gridLineWidth: 0,
+          title: {
+              text: serie.name,
+              style: {
+                  color: Highcharts.getOptions().colors[0]
+              }
+          },
+          labels: {
+              format: '{value} mm',
+              style: {
+                  color: Highcharts.getOptions().colors[0]
+              }
+          },
+          opposite: true
+      }
+    }
+
+    listYAxis.push(yAxis);
 };
 
 /*
@@ -96,52 +154,7 @@ function builtColumn() {
             type: 'datetime',
             tickPixelInterval: 150
         },
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}°C',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            title: {
-                text: 'Temperature',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            opposite: true
-
-        }, { // Secondary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'Rainfall',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value} mm',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            }
-
-        }, { // Tertiary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'Sea-Level Pressure',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            labels: {
-                format: '{value} mb',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            opposite: true
-        }],
+        yAxis: listYAxis,
         tooltip: {
             formatter: function () {
                 return '<b>' + this.series.name + '</b><br/>' + Highcharts.dateFormat('%H:%M:%S', this.x) + '<br/>' + Highcharts.numberFormat(this.y, 2);
@@ -150,31 +163,6 @@ function builtColumn() {
         exporting: {
             enabled: false
         },
-        series: [{
-            name: 'Rainfall',
-            type: 'spline',
-            yAxis: 1,
-            data: [],
-            tooltip: {
-                valueSuffix: ' mm'
-            }
-
-        }, {
-            name: 'Sea-Level Pressure',
-            type: 'spline',
-            yAxis: 2,
-            data: [],
-            tooltip: {
-                valueSuffix: ' mb'
-            }
-
-        }, {
-            name: 'Temperature',
-            type: 'spline',
-            data: [],
-            tooltip: {
-                valueSuffix: ' °C'
-            }
-        }]
+        series: seriesList
     });
 };

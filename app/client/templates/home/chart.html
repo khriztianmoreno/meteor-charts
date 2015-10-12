@@ -49,6 +49,14 @@
 				      {{/each}}
             </tbody>
           </table>
+          <div class="form-group pull-right">
+          	<button class="btn btn-lg btn-danger">Clear</button>
+          	{{#if listSensors.length}}							
+							<button id="getChart" class="btn btn-lg btn-success">Chart</button>
+						{{else}}
+							<button id="getChart" class="btn btn-lg btn-success disabled">Chart</button>
+          	{{/if}}          	
+          </div>
         </div>
       </div>
     </div>
