@@ -34,6 +34,7 @@ jquery@1.11.4
 launch-screen@1.0.4
 livedata@1.0.15
 logging@1.0.8
+maazalik:highcharts@0.4.0
 meteor@1.1.9
 meteor-base@1.0.1
 minifiers@1.1.7
@@ -59,6 +60,7 @@ standard-minifiers@1.0.1
 templating@1.1.4
 templating-tools@1.0.0
 tracker@1.0.9
+twbs:bootstrap@3.3.5
 ui@1.0.8
 underscore@1.0.4
 url@1.0.5
