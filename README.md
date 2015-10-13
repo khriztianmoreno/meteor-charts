@@ -1,2 +1,2 @@
 # meteor-charts
-Graphics in real time variables of a sensor
+Application for connecting "IOT" sensors simulate and displaying data in realtime. Built with Meteor, MongoDB and Highcharts
