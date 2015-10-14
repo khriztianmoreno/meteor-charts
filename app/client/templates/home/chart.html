@@ -1,7 +1,7 @@
 <template name="senseChart">
   <h2>Telemetry DashBoard</h2>
   <div class="row">
-    <div class="col-sm-6">
+    <div id="list-sensors" class="col-sm-12">
       <div class="panel panel-default">
         <div class="panel-heading font-bold">List Sensors <span class="badge bg-success pull-right">{{listSensors.length}}</span></div>
         <div class="panel-body">
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-6">
+    <div id="edit-panel" class="col-sm-6 hide">
       <div class="panel panel-default">
         <div class="panel-heading font-bold">Edit Sensor</div>
         <div class="panel-body">
@@ -53,7 +53,10 @@
 					      {{/each}}
 					    </select>
             </div>
-            <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
+            <div class="form-group pull-right">
+              <button class="btn btn-lg btn-danger cancel">Cancel</button>
+              <button type="submit" class="btn btn-lg btn-primary ">Save</button>
+            </div>            
           </form>
         </div>
       </div>

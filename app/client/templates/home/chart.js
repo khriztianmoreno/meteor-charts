@@ -5,22 +5,22 @@ Template.senseChart.created = function () {
         _id: 0,
         name: 'Sensor 1', // Get value from form element
         sensorId: 'sensor1',
-        color: 'Blue'
+        color: '#e60370'
     }, {
         _id: 1,
         name: 'Sensor 2', // Get value from form element
         sensorId: 'sensor2',
-        color: 'Black'
+        color: '#0066FF'
     }, {
         _id: 2,
         name: 'Sensor 3', // Get value from form element
         sensorId: 'sensor3',
-        color: 'Green'
+        color: '#00CCFF'
     }, {
         _id: 3,
         name: 'Sensor 4', // Get value from form element
         sensorId: 'sensor4',
-        color: 'Orange'
+        color: '#000000'
     }];
 
     self.seriesSensors = new ReactiveVar(sensors);
@@ -49,6 +49,7 @@ Template.senseChart.helpers({
 
 Template.senseChart.rendered = function () {
     var self = this;
+    $('#color').colorpicker();
     builtColumn();
 
     self.autorun(function () {
@@ -59,14 +60,8 @@ Template.senseChart.rendered = function () {
 
 Template.senseChart.events = {
 
-    'change #reactive': function (event, template) {
-        var newValue = $(event.target).val();
-        Session.set('reactive', parseInt(newValue));
-    },
-
     'submit #edit-sensor': function (event, template) {
         event.preventDefault();
-
         var sensor = {
             _id: Template.instance().editSensor.get()._id,
             name: event.target.name.value, // Get value from form element
@@ -101,8 +96,18 @@ Template.senseChart.events = {
         event.target.color.value = "";
     },
 
+    'click .cancel': function(){
+        event.preventDefault();
+        $('#edit-panel').addClass('hide');
+        $('#list-sensors').removeClass('col-sm-6').addClass('col-sm-12');
+    },
+
     'click #edit': function (event, template) {
         var self  = this;
+
+        $('#edit-panel').removeClass('hide');
+        $('#list-sensors').removeClass('col-sm-12').addClass('col-sm-6');
+
         var sensor = {
           name: self.name,
           color: self.color,
@@ -110,7 +115,6 @@ Template.senseChart.events = {
           _id: self._id
         }
 
-        console.log(Template.instance().seriesSensors.get()[sensor._id]);
         Template.instance().editSensor.set(sensor);
     }
 };
@@ -152,13 +156,13 @@ var listYAxis = [{ // 1 yAxis
     labels: {
         format: '{value}°C',
         style: {
-            color: '#0000FF'
+            color: '#e60370'
         }
     },
     title: {
         text: 'Sensor 1',
         style: {
-            color: '#0000FF'
+            color: '#e60370'
         }
     }
 }, { // 2 yAxis
@@ -209,6 +213,8 @@ var listYAxis = [{ // 1 yAxis
 
 function editAxis(axis){
   listYAxis[axis._id].title.text = axis.name;
+  listYAxis[axis._id].labels.style.color = Template.instance().seriesSensors.get()[axis._id].color;
+  listYAxis[axis._id].title.style.color = Template.instance().seriesSensors.get()[axis._id].color;
 };
 
 function editSerie(serie){
@@ -304,12 +310,14 @@ function updateChart() {
 
 
 function builtColumn() {
+
+  var colors = Template.instance().seriesSensors.get();
     chartSensers = new Highcharts.Chart({
         chart: {
             zoomType: 'xy',
             renderTo: 'container-column'
         },
-        colors: ['#0000FF', '#0066FF', '#00CCFF', '#000000'],
+        colors: [colors[0].color, colors[1].color, colors[2].color, colors[3].color],
         title: {
             text: 'Live Telemetry Sensors'
         },
