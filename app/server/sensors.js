@@ -7,7 +7,7 @@ Meteor.startup(function () {
         }, {
             name: "Sensor 2",
             typeSensor: "sensor2"
-        }/*, {
+        }, {
             name: "Sensor 3",
             typeSensor: "sensor3"
         }, {
@@ -91,7 +91,7 @@ Meteor.startup(function () {
         }, {
             name: "Sensor 30",
             typeSensor: "sensor30"
-        }*/];
+        }];
 
         function getRandomValue() {
             return Math.floor(Math.random() * 10) * 5;
